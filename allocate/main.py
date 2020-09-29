@@ -209,7 +209,7 @@ class NFVOPlugin(AllocateNSSIabc):
         create_ns_status = res_create_ns.json()['ns']['status']
         count = 0
         while create_ns_status != 'ACTIVE' and create_ns_status != 'ERROR':
-            show_ns_url = self.TACKER_URL + '/v1.0/nss/' + ns_id
+            show_ns_url = self.TACKER_URL + '/nss/' + ns_id
             res_show_ns = requests.get(show_ns_url, headers=headers).json()
             create_ns_status = res_show_ns['ns']['status']
             time.sleep(1)
