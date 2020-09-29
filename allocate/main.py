@@ -13,13 +13,15 @@ class NFVOPlugin(AllocateNSSIabc):
     def __init__(self, nm_host, nfvo_host, subscription_host, parameter):
         super().__init__(nm_host, nfvo_host, subscription_host, parameter)
         # Don't devstack environment OS_AUTH_URL can't add 'identity'.
-        self.OS_AUTH_URL = 'http://{}/identity'.format(nfvo_host.split(':')[0])
-        self.TACKER_URL = 'http://{}'.format(nfvo_host)
+        self.OS_AUTH_URL = 'http://192.168.1.219:5000/v3/'
+        #self.TACKER_URL = 'http://{}'.format(nfvo_host)
+        self.TACKER_URL = "http://192.168.1.219:9890/v1.0"
         self.OS_USER_DOMAIN_NAME = OS_USER_DOMAIN_NAME
         self.OS_USERNAME = OS_USERNAME
         self.OS_PASSWORD = OS_PASSWORD
         self.OS_PROJECT_DOMAIN_NAME = OS_PROJECT_DOMAIN_NAME
         self.OS_PROJECT_NAME = OS_PROJECT_NAME
+        self.OS_VIM_NAME = "jefferyvim"
         self.ary_data = list()
         self.nsd_id = str()
         self.nsd_name = str()
@@ -30,7 +32,7 @@ class NFVOPlugin(AllocateNSSIabc):
     def get_token(self):
         # print("\nGet token:")
         self.get_token_result = ''
-        get_token_url = self.OS_AUTH_URL + '/v3/auth/tokens'
+        get_token_url = 'http://192.168.1.219:5000/v3/auth/tokens'
         get_token_body = {
             'auth': {
                 'identity': {
@@ -58,14 +60,14 @@ class NFVOPlugin(AllocateNSSIabc):
             }
         }
         get_token_response = requests.post(get_token_url, data=json.dumps(get_token_body))
-        # print("Get OpenStack token status: " + str(get_token_response.status_code))
+        print("Get OpenStack token status: " + str(get_token_response.status_code))
         self.get_token_result = get_token_response.headers['X-Subject-Token']
         return self.get_token_result
 
     def get_project_id(self, project_name):
         # print("\nGet Project ID:")
         self.project_id = ''
-        get_project_list_url = self.OS_AUTH_URL + '/v3/projects'
+        get_project_list_url = self.OS_AUTH_URL + 'projects'
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         get_project_list_response = requests.get(get_project_list_url, headers=headers)
@@ -109,7 +111,8 @@ class NFVOPlugin(AllocateNSSIabc):
                 }
             }
         }
-        upload_vnfd_url = self.TACKER_URL + '/v1.0/vnfds'
+        #upload_vnfd_url = 'http://192.168.1.219:9890/v1.0/vnfds'
+        upload_vnfd_url = self.TACKER_URL + "/vnfds"
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         response = requests.post(upload_vnfd_url, data=json.dumps(vnfd_body), headers=headers)
@@ -131,7 +134,9 @@ class NFVOPlugin(AllocateNSSIabc):
                 }
             }
         }
-        upload_nsd_url = self.TACKER_URL + '/v1.0/nsds'
+        print(str(nsd_body))
+        #upload_nsd_url = 'http://192.168.1.219:9890/v1.0/nsds'
+        upload_nsd_url = self.TACKER_URL + "/nsds"
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         response = requests.post(upload_nsd_url, data=json.dumps(nsd_body), headers=headers)
@@ -147,6 +152,30 @@ class NFVOPlugin(AllocateNSSIabc):
     def create_ns_instance(self):
         pass
 
+    def list_vim(self):
+        get_vim_list_url = self.TACKER_URL + '/vims'
+        token = self.get_token()
+        headers = {'X-Auth-Token': token}
+        get_vim_list_response = requests.get(get_vim_list_url, headers=headers)
+        print("Get Tacker vim list status: " + str(get_vim_list_response.status_code))
+        get_vim_list_result = get_vim_list_response.json()
+        #text = get_vim_list_response.text
+        #print(get_vim_list_result)
+        #print(text)
+        return get_vim_list_result
+
+    def get_vim_id(self, vim_name):
+        vim_list = self.list_vim()
+        #print(vim_list)
+        vim_id = None
+        for vim in vim_list['vims']:
+            if vim['name'] == vim_name:
+                vim_id = vim['id']
+                print (vim_id)
+            pass
+        return vim_id
+
+
     def ns_instantiation(self, ns_descriptor_path):
         nsd_params_file = os.path.join(ns_descriptor_path, 'Definitions/params/{}.yaml').format(
             self.nsd_name)
@@ -159,6 +188,7 @@ class NFVOPlugin(AllocateNSSIabc):
             nsd_params = yaml.safe_load(open(nsd_params_file, 'r+').read())
         else:
             nsd_params = {}
+        vim_id = self.get_vim_id(self.OS_VIM_NAME)
         ns_body = {
             'ns': {
                 'name': self.nsd_name,
@@ -167,10 +197,12 @@ class NFVOPlugin(AllocateNSSIabc):
                 'tenant_id': self.get_project_id(self.OS_PROJECT_NAME),
                 'attributes': {
                     'param_values': nsd_params
-                }
+                },
+                'vim_id': vim_id,
             }
         }
-        create_ns_url = self.TACKER_URL + '/v1.0/nss'
+        #create_ns_url = 'http://192.168.1.219:9890/v1.0/nss'
+        create_ns_url = self.TACKER_URL + "/nss"
         res_create_ns = requests.post(create_ns_url, data=json.dumps(ns_body), headers=headers)
         print('Create NS status: ' + str(res_create_ns.status_code))
         ns_id = res_create_ns.json()['ns']['id']
