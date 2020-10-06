@@ -10,8 +10,8 @@ class NFVOPlugin(DeallocateNSSIabc):
     def __init__(self, nm_host, nfvo_host, subscription_host, parameter):
         super().__init__(nm_host, nfvo_host, subscription_host, parameter)
         # Don't devstack environment OS_AUTH_URL can't add 'identity'.
-        self.OS_AUTH_URL = 'http://{}/identity'.format(nfvo_host.split(':')[0])
-        self.TACKER_URL = 'http://{}'.format(nfvo_host)
+        self.OS_AUTH_URL = 'http://192.168.1.219:5000/v3/'
+        self.TACKER_URL = "http://192.168.1.219:9890/v1.0"
         self.OS_USER_DOMAIN_NAME = OS_USER_DOMAIN_NAME
         self.OS_USERNAME = OS_USERNAME
         self.OS_PASSWORD = OS_PASSWORD
@@ -26,7 +26,7 @@ class NFVOPlugin(DeallocateNSSIabc):
     def get_token(self):
         # print("\nGet token:")
         self.get_token_result = ''
-        get_token_url = self.OS_AUTH_URL + '/v3/auth/tokens'
+        get_token_url = 'http://192.168.1.219:5000/v3/auth/tokens'
         get_token_body = {
             'auth': {
                 'identity': {
@@ -61,7 +61,7 @@ class NFVOPlugin(DeallocateNSSIabc):
     def get_project_id(self, project_name):
         # print("\nGet Project ID:")
         self.project_id = ''
-        get_project_list_url = self.OS_AUTH_URL + '/v3/projects'
+        get_project_list_url = self.OS_AUTH_URL + 'projects'
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         get_project_list_response = requests.get(get_project_list_url, headers=headers)
@@ -89,14 +89,14 @@ class NFVOPlugin(DeallocateNSSIabc):
 
     def delete_network_service_instance(self):
         print('\nDelete NS: ' + self.ns_instance)
-        terminate_ns_url = self.TACKER_URL + '/v1.0/nss/{}'.format(self.ns_instance)
+        terminate_ns_url = self.TACKER_URL + '/nss/{}'.format(self.ns_instance)
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         response = requests.delete(terminate_ns_url, headers=headers)
         print('Delete NS status: ' + str(response.status_code))
         count = 0
         while 1:
-            show_ns_url = self.TACKER_URL + '/v1.0/nss'
+            show_ns_url = self.TACKER_URL + '/nss'
             res_show_ns = requests.get(show_ns_url, headers=headers).json()
             existed_status = 0
             for _ in res_show_ns['nss']:
@@ -118,7 +118,7 @@ class NFVOPlugin(DeallocateNSSIabc):
 
     def delete_network_service_descriptor(self):
         print('\nDelete NSD: ' + self.ns_descriptor)
-        delete_nsd_url = self.TACKER_URL + '/v1.0/nsds/{}'.format(self.ns_descriptor)
+        delete_nsd_url = self.TACKER_URL + '/nsds/{}'.format(self.ns_descriptor)
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         response = requests.delete(delete_nsd_url, headers=headers)
@@ -132,12 +132,12 @@ class NFVOPlugin(DeallocateNSSIabc):
 
     def delete_vnf_package(self):
         print('\nDelete VNFP...')
-        get_nsd_url = self.TACKER_URL + '/v1.0/vnfds'
+        get_nsd_url = self.TACKER_URL + '/vnfds'
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         response = requests.get(get_nsd_url, headers=headers)
         for vnfp in response.json()['vnfds']:
-            delete_nsd_url = self.TACKER_URL + '/v1.0/vnfds/{}'.format(vnfp['id'])
+            delete_nsd_url = self.TACKER_URL + '/vnfds/{}'.format(vnfp['id'])
             response = requests.delete(delete_nsd_url, headers=headers)
             print('Delete VNFP status: ' + str(response.status_code))
 
