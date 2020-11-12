@@ -10,8 +10,10 @@ class NFVOPlugin(DeallocateNSSIabc):
     def __init__(self, nm_host, nfvo_host, subscription_host, parameter):
         super().__init__(nm_host, nfvo_host, subscription_host, parameter)
         # Don't devstack environment OS_AUTH_URL can't add 'identity'.
-        self.OS_AUTH_URL = 'http://192.168.1.219:5000/v3/'
-        self.TACKER_URL = "http://192.168.1.219:9890/v1.0"
+        #self.OS_AUTH_URL = 'http://192.168.1.219:5000/v3/'
+        #self.TACKER_URL = "http://192.168.1.219:9890/v1.0"
+        self.OS_AUTH_URL = 'http://{}:5000/v3/'.format(OS_MA_NFVO_IP)
+        self.TACKER_URL = 'http://{}:9890/v1.0'.format(OS_MA_NFVO_IP)
         self.OS_USER_DOMAIN_NAME = OS_USER_DOMAIN_NAME
         self.OS_USERNAME = OS_USERNAME
         self.OS_PASSWORD = OS_PASSWORD
@@ -26,7 +28,8 @@ class NFVOPlugin(DeallocateNSSIabc):
     def get_token(self):
         # print("\nGet token:")
         self.get_token_result = ''
-        get_token_url = 'http://192.168.1.219:5000/v3/auth/tokens'
+        #get_token_url = 'http://192.168.1.219:5000/v3/auth/tokens'
+        get_token_url = self.OS_AUTH_URL + 'auth/tokens'
         get_token_body = {
             'auth': {
                 'identity': {
