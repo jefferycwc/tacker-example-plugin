@@ -246,9 +246,12 @@ class NFVOPlugin(AllocateNSSIabc):
             ip = sub_obj_list[2][1:-2]
             management_urls.append(ip)
         
-        for ip in management_urls:
-            print(ip)
-
+        body = {
+            'management_urls' : management_urls
+        }
+        url = 'http://192.168.1.103:5010/vnf_monitor'
+        response = requests.post(url,json=body)
+        
     def list_vnf(self):
         token = self.get_token()
         headers = {'X-Auth-Token': token}
