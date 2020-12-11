@@ -238,6 +238,7 @@ class NFVOPlugin(AllocateNSSIabc):
         self.add_vnf_monitor(vnf_info)
 
     def add_vnf_monitor(self,vnf_info):
+        print(type(vnf_info))
         for i in vnf_info:
             print(i)
 
