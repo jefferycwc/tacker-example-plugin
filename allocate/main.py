@@ -235,9 +235,9 @@ class NFVOPlugin(AllocateNSSIabc):
             'nsState': ns_state,
             'monitoringParameter': monitoringParameter
         }
-        self.add_vnf_monitor(monitoringParameter)
+        self.add_vnf_monitor(ns_instance_id,monitoringParameter)
 
-    def add_vnf_monitor(self,monitoringParameter):
+    def add_vnf_monitor(self,ns_instance_id,monitoringParameter):
         monitoringParameter = monitoringParameter[1:-1]
         monitoring_obj_list = monitoringParameter.split(", ")
         management_urls = []
@@ -251,7 +251,8 @@ class NFVOPlugin(AllocateNSSIabc):
         }
         url = 'http://192.168.1.103:5010/vnf_monitor'
         response = requests.post(url,json=body)
-        
+        print('Starting monitor service on each VNF belongs to NS {}'.format(ns_instance_id))
+
     def list_vnf(self):
         token = self.get_token()
         headers = {'X-Auth-Token': token}
