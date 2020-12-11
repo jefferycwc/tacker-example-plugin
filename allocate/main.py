@@ -239,11 +239,11 @@ class NFVOPlugin(AllocateNSSIabc):
 
     def add_vnf_monitor(self,monitoringParameter):
         monitoringParameter = monitoringParameter[1:-1]
-        monitoring_objs = monitoringParameter.split(", ")
+        monitoring_obj_list = monitoringParameter.split(", ")
         management_urls = []
-        for obj in monitoring_objs:
-            sub_obj = obj.split(": ")
-            ip = sub_obj[1:-2]
+        for obj in monitoring_obj_list:
+            sub_obj_list = obj.split(": ")
+            ip = sub_obj_list[2][1:-2]
             management_urls.append(ip)
         
         for ip in management_urls:
