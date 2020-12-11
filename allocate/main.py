@@ -235,12 +235,13 @@ class NFVOPlugin(AllocateNSSIabc):
             'nsState': ns_state,
             'monitoringParameter': monitoringParameter
         }
-        self.add_vnf_monitor(vnf_info)
+        self.add_vnf_monitor(monitoringParameter)
 
-    def add_vnf_monitor(self,vnf_info):
-        print(type(vnf_info))
-        for i in vnf_info:
-            print(i)
+    def add_vnf_monitor(self,monitoringParameter):
+        monitoring_objs = monitoringParameter.split(", ")
+        for obj in monitoring_objs:
+            print(obj)
+
 
     def list_vnf(self):
         token = self.get_token()
