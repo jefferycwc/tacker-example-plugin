@@ -238,6 +238,7 @@ class NFVOPlugin(AllocateNSSIabc):
         self.add_vnf_monitor(monitoringParameter)
 
     def add_vnf_monitor(self,monitoringParameter):
+        monitoringParameter = monitoringParameter[1:-1]
         monitoring_objs = monitoringParameter.split(", ")
         for obj in monitoring_objs:
             print(obj)
