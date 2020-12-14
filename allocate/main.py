@@ -238,8 +238,16 @@ class NFVOPlugin(AllocateNSSIabc):
         self.add_vnf_monitor(ns_instance_id,vnf_info)
 
     def add_vnf_monitor(self,ns_instance_id,vnf_info):
-        for i in vnf_info:
-            print(i)
+        vnf_info = vnf_info[1:-1]
+        vnf_info_list = vnf_info.split(", ")
+        vnf_id = []        
+        for obj in vnf_info_list:
+            sub_obj_list = obj.split(": ")
+            sub_obj = sub_obj_list[1][1:-1]
+            vnf_id.append(sub_obj)
+
+        for i in vnf_id:
+            print(i) 
 
     def list_vnf(self):
         token = self.get_token()
