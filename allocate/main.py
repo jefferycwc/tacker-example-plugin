@@ -243,8 +243,10 @@ class NFVOPlugin(AllocateNSSIabc):
         get_vnf_url = self.TACKER_URL + "/vnfs/" + vnf_id
         res_get_vnf = requests.get(get_vnf_url,headers=headers)
         attributes = res_get_vnf.json()['vnf']['attributes']
-        floating_ip_address = attributes['floating_ip_address']
-        return floating_ip_address
+        heat_template = attributes['heat_template']
+        print(type(heat_template))
+        #floating_ip_address = attributes['floating_ip_address']
+        #return floating_ip_address
 
     def add_vnf_monitor(self,ns_instance_id,vnf_info):
         vnf_info = vnf_info[1:-1]
@@ -258,10 +260,10 @@ class NFVOPlugin(AllocateNSSIabc):
         floating_ip_dict = []
         for i in vnf_id:
             floating_ip_address = self.get_floating_ip(i)
-            floating_ip_dict.append(floating_ip_address)
+            #floating_ip_dict.append(floating_ip_address)
 
-        for i in floating_ip_dict:
-            print(i)
+        '''for i in floating_ip_dict:
+            print(i)'''
         
     def list_vnf(self):
         token = self.get_token()
