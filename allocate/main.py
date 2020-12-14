@@ -263,7 +263,7 @@ class NFVOPlugin(AllocateNSSIabc):
             vnf_name+=heat_template[index]
             index = index+1
         #floating_ip_address = attributes['floating_ip_address']
-        return vmf_name,floating_ip_address
+        return vnf_name,floating_ip_address
 
     def add_vnf_monitor(self,ns_instance_id,vnf_info):
         vnf_info = vnf_info[1:-1]
