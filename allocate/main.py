@@ -246,20 +246,22 @@ class NFVOPlugin(AllocateNSSIabc):
         heat_template = attributes['heat_template']
         floating_ip_address=""
         index = heat_template.find("floating_ip_address")
-        index = index + 21
+        index = index+21
         while(1):
-            if heat_template[index]=='\n'
+            if heat_template[index]=='\n':
                 break
             floating_ip_address.append(heat_template[index])
+            index = index+1
         #floating_ip_address = heat_template[index+21:index+33]
     
         vnf_name = ""
         index = heat_template.find("name")
-        index = index + 6
+        index = index+6
         while(1):
-            if heat_template[index]=='\n'
+            if heat_template[index]=='\n':
                 break
             vnf_name.append(heat_template[index])
+            index = index+1
         #floating_ip_address = attributes['floating_ip_address']
         return vmf_name,floating_ip_address
 
