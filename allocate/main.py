@@ -258,16 +258,16 @@ class NFVOPlugin(AllocateNSSIabc):
             sub_obj = sub_obj_list[1][1:-1]
             vnf_id.append(sub_obj)
 
-        floating_ip_dict = []
+        
+        url = 'http://192.168.1.103:5010/vnf_monitor'
         for i in vnf_id:
             floating_ip_address = self.get_floating_ip(i)
-            floating_ip_dict.append(floating_ip_address)
+            body = {
+                'floating_ip_address': floating_ip_address
+            }
+            response = requests.post(url,json=body)
+       
         
-        body = {
-            'floating_ip_address' : floating_ip_address
-        }
-        url = 'http://192.168.1.103:5010/vnf_monitor'
-        response = requests.post(url,json=body)
         '''for i in floating_ip_dict:
             print(i)'''
         
