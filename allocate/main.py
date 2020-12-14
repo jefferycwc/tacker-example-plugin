@@ -278,12 +278,12 @@ class NFVOPlugin(AllocateNSSIabc):
         url = 'http://192.168.1.103:5010/vnf_monitor'
         for i in vnf_id:
             vnf_name,floating_ip_address = self.get_vnf_attr(i)
-            print("vnf_name:{} floating_ip_address:{}".format(vnf_name,floating_ip_address))
+            #print("vnf_name:{} floating_ip_address:{}".format(vnf_name,floating_ip_address))
             body = {
                 'floating_ip_address': floating_ip_address
             }
             response = requests.post(url,json=body)
-
+            print('Add VNF Monitor on {}'.format(vnf_name))
         
         '''for i in floating_ip_dict:
             print(i)'''
