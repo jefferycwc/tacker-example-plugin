@@ -243,7 +243,7 @@ class NFVOPlugin(AllocateNSSIabc):
         get_vnf_url = self.TACKER_URL + "/vnfs/" + vnf_id
         res_get_vnf = requests.get(get_vnf_url,headers=headers)
         attributes = res_get_vnf.json()['vnf']['attributes']
-        print(attributes)
+        print(type(attributes))
 
     def add_vnf_monitor(self,ns_instance_id,vnf_info):
         vnf_info = vnf_info[1:-1]
