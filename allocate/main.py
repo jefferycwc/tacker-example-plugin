@@ -280,6 +280,7 @@ class NFVOPlugin(AllocateNSSIabc):
             vnf_name,floating_ip_address = self.get_vnf_attr(i)
             #print("vnf_name:{} floating_ip_address:{}".format(vnf_name,floating_ip_address))
             body = {
+                'vnf_name': vnf_name,
                 'floating_ip_address': floating_ip_address
             }
             response = requests.post(url,json=body)
