@@ -242,8 +242,8 @@ class NFVOPlugin(AllocateNSSIabc):
         headers = {'X-Auth-Token': token}
         get_vnf_url = self.TACKER_URL + "/vnfs/" + vnf_id
         res_get_vnf = requests.get(get_vnf_url,headers=headers)
-        res_get_vnf = res_get_vnf.json()['vnf']
-        print(res_get_vnf)
+        attributes = res_get_vnf.json()['vnf']['attributes']
+        print(attributes)
 
     def add_vnf_monitor(self,ns_instance_id,vnf_info):
         vnf_info = vnf_info[1:-1]
