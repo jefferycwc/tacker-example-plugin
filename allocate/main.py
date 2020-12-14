@@ -237,17 +237,31 @@ class NFVOPlugin(AllocateNSSIabc):
         }
         self.add_vnf_monitor(ns_instance_id,vnf_info)
 
-    def get_floating_ip(self,vnf_id):
+    def get_vnf_attr(self,vnf_id):
         token = self.get_token()
         headers = {'X-Auth-Token': token}
         get_vnf_url = self.TACKER_URL + "/vnfs/" + vnf_id
         res_get_vnf = requests.get(get_vnf_url,headers=headers)
         attributes = res_get_vnf.json()['vnf']['attributes']
         heat_template = attributes['heat_template']
+        floating_ip_address=""
         index = heat_template.find("floating_ip_address")
-        floating_ip_address = heat_template[index+21:index+33]
+        index = index + 21
+        while(1)
+            if heat_template[index]=='\n'
+                break
+            floating_ip_address.append(heat_template[index])
+        #floating_ip_address = heat_template[index+21:index+33]
+    
+        vnf_name = ""
+        index = heat_template.find("name")
+        index = index + 6
+        while(1)
+            if heat_template[index]=='\n'
+                break
+            vnf_name.append(heat_template[index])
         #floating_ip_address = attributes['floating_ip_address']
-        return floating_ip_address
+        return vmf_name,floating_ip_address
 
     def add_vnf_monitor(self,ns_instance_id,vnf_info):
         vnf_info = vnf_info[1:-1]
@@ -261,12 +275,13 @@ class NFVOPlugin(AllocateNSSIabc):
         
         url = 'http://192.168.1.103:5010/vnf_monitor'
         for i in vnf_id:
-            floating_ip_address = self.get_floating_ip(i)
+            vnf_name,floating_ip_address = self.get_vnf_attr(i)
+            print("vnf_name:{} floating_ip_address:{}".format(vnf_name,floating_ip_address))
             body = {
                 'floating_ip_address': floating_ip_address
             }
             response = requests.post(url,json=body)
-       
+
         
         '''for i in floating_ip_dict:
             print(i)'''
