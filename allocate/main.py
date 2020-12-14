@@ -240,7 +240,7 @@ class NFVOPlugin(AllocateNSSIabc):
     def get_floating_ip(self,vnf_id):
         token = self.get_token()
         headers = {'X-Auth-Token': token}
-        get_vnf_url = self.TACKER_URL + "/vnfs" + vnf_id
+        get_vnf_url = self.TACKER_URL + "/vnfs/" + vnf_id
         res_get_vnf = requests.get(get_vnf_url,headers=headers)
         res_get_vnf = res_get_vnf.json()['vnf']
         print(res_get_vnf)
