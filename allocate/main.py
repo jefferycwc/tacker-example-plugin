@@ -235,7 +235,7 @@ class NFVOPlugin(AllocateNSSIabc):
             'nsState': ns_state,
             'monitoringParameter': monitoringParameter
         }
-        self.add_vnf_monitor(ns_instance_id,monitoringParameter)
+        #self.add_vnf_monitor(ns_instance_id,monitoringParameter)
 
     def add_vnf_monitor(self,ns_instance_id,monitoringParameter):
         monitoringParameter = monitoringParameter[1:-1]
