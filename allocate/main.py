@@ -63,7 +63,7 @@ class NFVOPlugin(AllocateNSSIabc):
             }
         }
         get_token_response = requests.post(get_token_url, data=json.dumps(get_token_body))
-        print("Get OpenStack token status: " + str(get_token_response.status_code))
+        #print("Get OpenStack token status: " + str(get_token_response.status_code))
         self.get_token_result = get_token_response.headers['X-Subject-Token']
         return self.get_token_result
 
@@ -174,7 +174,7 @@ class NFVOPlugin(AllocateNSSIabc):
         for vim in vim_list['vims']:
             if vim['name'] == vim_name:
                 vim_id = vim['id']
-                print (vim_id)
+                #print (vim_id)
             pass
         return vim_id
 
@@ -262,9 +262,14 @@ class NFVOPlugin(AllocateNSSIabc):
         for i in vnf_id:
             floating_ip_address = self.get_floating_ip(i)
             floating_ip_dict.append(floating_ip_address)
-
-        for i in floating_ip_dict:
-            print(i)
+        
+        body = {
+            'floating_ip_address' : floating_ip_address
+        }
+        url = 'http://192.168.1.103:5010/vnf_monitor'
+        response = requests.post(url,json=body)
+        '''for i in floating_ip_dict:
+            print(i)'''
         
     def list_vnf(self):
         token = self.get_token()
