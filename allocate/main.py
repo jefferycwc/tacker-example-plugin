@@ -235,7 +235,7 @@ class NFVOPlugin(AllocateNSSIabc):
             'nsState': ns_state,
             'monitoringParameter': monitoringParameter
         }
-        self.add_vnf_monitor(ns_instance_id,vnf_info)
+        #self.add_vnf_monitor(ns_instance_id,vnf_info)
 
     def get_vnf_attr(self,vnf_id):
         token = self.get_token()
